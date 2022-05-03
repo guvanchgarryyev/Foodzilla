@@ -2,7 +2,6 @@ package com.example.foodzilla.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.foodzilla.activities.CategoryMealsActivity
 import com.example.foodzilla.activities.MealActivity
 import com.example.foodzilla.adapters.CategoriesAdapter
 import com.example.foodzilla.adapters.MostPopularAdapter
@@ -33,6 +33,7 @@ class HomeFragment : Fragment() {
         const val MEAL_ID = "com.example.foodzilla.fragments.idMeal"
         const val MEAL_NAME = "com.example.foodzilla.fragments.nameMeal"
         const val MEAL_THUMB = "com.example.foodzilla.fragments.thumbMeal"
+        const val CATEGORY_NAME = "com.example.foodzilla.fragments.categoryName"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,8 +67,16 @@ class HomeFragment : Fragment() {
         prepareCategoriesRecyclerView()
         homeViewModel.getCategories()
         observeCategoriesLiveData()
+        onCategoryClick()
 
+    }
 
+    private fun onCategoryClick() {
+        categoriesAdapter.onItemClick = { category ->
+            val intent = Intent(activity, CategoryMealsActivity::class.java)
+            intent.putExtra(CATEGORY_NAME, category.strCategory)
+            startActivity(intent)
+        }
     }
 
     private fun prepareCategoriesRecyclerView() {
