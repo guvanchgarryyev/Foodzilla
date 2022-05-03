@@ -41,7 +41,7 @@ class MealViewModel(
 
     fun insertMeal(meal: Meal){
         viewModelScope.launch {
-            mealDatabase.mealDao().insertMeal(meal)
+            mealDatabase.mealDao().upsert(meal)
         }
     }
 

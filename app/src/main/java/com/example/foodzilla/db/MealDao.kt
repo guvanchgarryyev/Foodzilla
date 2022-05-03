@@ -7,7 +7,7 @@ import com.example.foodzilla.dataClasses.Meal
 @Dao
 interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMeal(meal:Meal)
+    suspend fun upsert(meal:Meal)
 
     @Delete
     suspend fun delete(meal:Meal)
