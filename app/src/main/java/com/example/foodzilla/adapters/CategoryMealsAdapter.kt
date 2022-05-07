@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.foodzilla.dataClasses.Meal
 import com.example.foodzilla.dataClasses.MealsByCategory
 import com.example.foodzilla.databinding.MealItemsBinding
 
