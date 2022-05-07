@@ -1,19 +1,16 @@
 package com.example.foodzilla.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.foodzilla.R
 import com.example.foodzilla.activities.MainActivity
-import com.example.foodzilla.adapters.FavoritesMealsAdapter
+import com.example.foodzilla.adapters.MealsAdapter
 import com.example.foodzilla.databinding.FragmentFavoritesBinding
 import com.example.foodzilla.viewModel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -23,7 +20,7 @@ class FavoritesFragment : Fragment() {
 
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var viewModel: HomeViewModel
-    private lateinit var favoritesAdapter:FavoritesMealsAdapter
+    private lateinit var adapter:MealsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +53,12 @@ class FavoritesFragment : Fragment() {
             ) = true
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                viewModel.deleteMeal(favoritesAdapter.differ.currentList[position])
+                viewModel.deleteMeal(adapter.differ.currentList[position])
 
                 Snackbar.make(requireView(), "Meal deleted", Snackbar.LENGTH_LONG).setAction(
                     "Undo",
                     View.OnClickListener {
-                        viewModel.insertMeal(favoritesAdapter.differ.currentList[position])
+                        viewModel.insertMeal(adapter.differ.currentList[position])
                     }
                 ).show()
             }
@@ -70,16 +67,16 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun prepareRecyclerView() {
-        favoritesAdapter = FavoritesMealsAdapter()
+        adapter = MealsAdapter()
         binding.rvFavorites.apply{
             layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-            adapter = favoritesAdapter
+            adapter = adapter
         }
     }
 
     private fun observeFavorites() {
         viewModel.observeFavoritesMealsLiveData().observe(viewLifecycleOwner, Observer { meals->
-            favoritesAdapter.differ.submitList(meals)
+            adapter.differ.submitList(meals)
         })
     }
 

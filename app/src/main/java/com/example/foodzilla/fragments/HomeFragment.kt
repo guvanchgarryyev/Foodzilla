@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.foodzilla.R
 import com.example.foodzilla.activities.CategoryMealsActivity
 import com.example.foodzilla.activities.MainActivity
 import com.example.foodzilla.activities.MealActivity
 import com.example.foodzilla.adapters.CategoriesAdapter
+import com.example.foodzilla.adapters.CategoryMealsAdapter
 import com.example.foodzilla.adapters.MostPopularAdapter
 import com.example.foodzilla.dataClasses.MealsByCategory
 import com.example.foodzilla.dataClasses.Meal
@@ -69,6 +72,14 @@ class HomeFragment : Fragment() {
         observeCategoriesLiveData()
         onCategoryClick()
 
+        onSearchIconClick()
+
+    }
+
+    private fun onSearchIconClick() {
+        binding.imageSearch.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
     }
 
     private fun onCategoryClick() {
