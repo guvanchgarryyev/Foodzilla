@@ -25,6 +25,8 @@ class HomeViewModel(
 
     private var saveStateRandomMeal : Meal ?=null
 
+    private var saveStateRandomMeal : Meal ?=null
+
     fun getRandomMeal(){
         saveStateRandomMeal?.let { randomMeal ->
             randomMealLiveData.postValue(randomMeal)
