@@ -1,5 +1,6 @@
 package com.example.foodzilla.viewModel
 
+import android.app.DownloadManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,13 +21,21 @@ class HomeViewModel(
     private var popularItemsLiveData = MutableLiveData<List<MealsByCategory>>()
     private var categoriesLiveData = MutableLiveData<List<Category>>()
     private var favoritesMealsLiveData = mealDatabase.mealDao().getAllMeals()
+    private var searchedMealsLiveData = MutableLiveData<List<Meal>>()
+
+    private var saveStateRandomMeal : Meal ?=null
 
     fun getRandomMeal(){
+        saveStateRandomMeal?.let { randomMeal ->
+            randomMealLiveData.postValue(randomMeal)
+            return
+        }
         RetrofitInstance.api.getRandomMeal().enqueue(object : Callback<MealList> {
             override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
                 if(response.body() != null){
                     val randomMeal: Meal = response.body()!!.meals[0]
                     randomMealLiveData.value = randomMeal
+                    saveStateRandomMeal = randomMeal
                 }
             }
 
@@ -77,6 +86,24 @@ class HomeViewModel(
             mealDatabase.mealDao().upsert(meal)
         }
     }
+
+    fun searchMeals(searchQuery: String) = RetrofitInstance.api.searchMeals(searchQuery).enqueue(
+        object : Callback<MealList>{
+            override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+                val mealsList = response.body()?.meals
+                mealsList?.let{
+                    searchedMealsLiveData.postValue(it)
+                }
+            }
+
+            override fun onFailure(call: Call<MealList>, t: Throwable) {
+                Log.e("HomeViewModel", t.message.toString())
+            }
+
+        }
+    )
+
+    fun observeSearchedMealsLiveData() : LiveData<List<Meal>> = searchedMealsLiveData
 
     fun observeRandomMealLivedata():LiveData<Meal>{
         return randomMealLiveData
